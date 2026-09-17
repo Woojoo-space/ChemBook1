@@ -41,6 +41,17 @@ const colorRecipes = {
   'blue-red-yellow': '#68523c',
 };
 
+const colorNames = {
+  '': 'white',
+  red: 'red',
+  blue: 'blue',
+  yellow: 'yellow',
+  'red-yellow': 'orange',
+  'blue-red': 'purple',
+  'blue-yellow': 'green',
+  'blue-red-yellow': 'muddy brown',
+};
+
 const pondTargets = [
   { name: 'Red', color: '#e53935', value: -3 },
   { name: 'Orange', color: '#fb8c00', value: -2 },
@@ -74,7 +85,9 @@ function App() {
   const isDrawing = useRef(false);
 
   const stage = stages[stageIndex];
-  const keyColor = colorRecipes[recipeKey(keyPaints)] ?? '#f7f3e8';
+  const keyRecipe = recipeKey(keyPaints);
+  const keyColor = colorRecipes[keyRecipe] ?? '#f7f3e8';
+  const keyMixName = colorNames[keyRecipe] ?? 'mystery color';
   const pond = pondByValue.get(pondLevel) ?? pondByValue.get(0);
   const foundAllPondColors = pondTargets.every((target) =>
     foundPondValues.includes(target.value),
@@ -302,6 +315,26 @@ function App() {
           </div>
           <div className="key-station">
             <div className="key-shine" />
+            <div className="mix-equation" aria-label={`color mix makes ${keyMixName}`}>
+              {keyPaints.length === 0 ? (
+                <span className="empty-mix">Pick paint colors</span>
+              ) : (
+                <>
+                  {keyPaints.map((color, index) => (
+                    <span className="mix-piece" key={color}>
+                      {index > 0 && <strong>+</strong>}
+                      <i style={{ '--swatch': paintColors[color] }} />
+                      <em>{color}</em>
+                    </span>
+                  ))}
+                  <strong>=</strong>
+                  <span className="mix-piece result">
+                    <i style={{ '--swatch': keyColor }} />
+                    <em>{keyMixName}</em>
+                  </span>
+                </>
+              )}
+            </div>
             <div
               className="science-key"
               style={{ '--key-color': keyColor }}
