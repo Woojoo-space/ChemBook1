@@ -69,6 +69,10 @@ function recipeKey(colors) {
   return [...colors].sort().join('-');
 }
 
+function keyMessage(colorName) {
+  return `The key has ${colorName}. What happens if we mix more?`;
+}
+
 function App() {
   const [stageIndex, setStageIndex] = useState(0);
   const [message, setMessage] = useState('Welcome, junior scientist.');
@@ -88,6 +92,12 @@ function App() {
   const keyRecipe = recipeKey(keyPaints);
   const keyColor = colorRecipes[keyRecipe] ?? '#f7f3e8';
   const keyMixName = colorNames[keyRecipe] ?? 'mystery color';
+  const displayMessage =
+    stageIndex === 0 &&
+    keyPaints.length > 0 &&
+    message.includes('What happens if we mix more?')
+      ? keyMessage(keyMixName)
+      : message;
   const pond = pondByValue.get(pondLevel) ?? pondByValue.get(0);
   const foundAllPondColors = pondTargets.every((target) =>
     foundPondValues.includes(target.value),
@@ -104,7 +114,7 @@ function App() {
       const nextPaints = current.includes(color) ? current : [...current, color];
       const nextMixName = colorNames[recipeKey(nextPaints)] ?? 'mystery color';
 
-      setMessage(`The key has ${nextMixName}. What happens if we mix more?`);
+      setMessage(keyMessage(nextMixName));
       return nextPaints;
     });
   }
@@ -458,7 +468,7 @@ function App() {
         {renderStage()}
 
         <p className="lab-message" role="status">
-          {message}
+          {displayMessage}
         </p>
       </section>
     </main>

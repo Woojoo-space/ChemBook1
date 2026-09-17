@@ -29,3 +29,12 @@ test('describes the mixed key color in the status message', () => {
 
   expect(screen.getByRole('status').textContent).toMatch(/key has orange/i);
 });
+
+test('keeps the status message matched to the current key color', () => {
+  render(<App />);
+
+  fireEvent.click(screen.getByRole('button', { name: /red/i }));
+  fireEvent.click(screen.getByRole('button', { name: /blue/i }));
+
+  expect(screen.getByRole('status').textContent).toMatch(/key has purple/i);
+});
