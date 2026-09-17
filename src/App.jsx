@@ -100,10 +100,13 @@ function App() {
 
   function addPaint(color) {
     setShowPrize(false);
-    setMessage(`The key has ${color}. What happens if we mix more?`);
-    setKeyPaints((current) =>
-      current.includes(color) ? current : [...current, color],
-    );
+    setKeyPaints((current) => {
+      const nextPaints = current.includes(color) ? current : [...current, color];
+      const nextMixName = colorNames[recipeKey(nextPaints)] ?? 'mystery color';
+
+      setMessage(`The key has ${nextMixName}. What happens if we mix more?`);
+      return nextPaints;
+    });
   }
 
   function resetKey() {

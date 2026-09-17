@@ -20,3 +20,12 @@ test('unlocks the first word cards after mixing orange', () => {
   expect(screen.getByRole('button', { name: 'How' })).toBeDefined();
   expect(screen.getByRole('button', { name: 'Who' })).toBeDefined();
 });
+
+test('describes the mixed key color in the status message', () => {
+  render(<App />);
+
+  fireEvent.click(screen.getByRole('button', { name: /red/i }));
+  fireEvent.click(screen.getByRole('button', { name: /yellow/i }));
+
+  expect(screen.getByRole('status').textContent).toMatch(/key has orange/i);
+});
